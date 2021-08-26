@@ -20,9 +20,9 @@ def append_embedding(adata, embedding=None, name="EMBED", sample_col=None, metho
             embedding = embedding.loc[adata.obs.index]
             embedding = np.array(embedding)
         adata.obsm[name] = embedding
-    elif method is 'umap':
+    elif method == 'umap':
         apply_umap(adata)
-    elif method is 'ae':
+    elif method == 'ae':
         apply_ae_embed(adata)
     else:
         print('unknown embedding method')
@@ -92,7 +92,7 @@ def combine_id_labels(df, columns=None):
     if columns is None:
         columns = ['class', 'subclass', 'region']
     for col in columns:
-        df[col] = df[col + '_id'] + '_' + df[col + '_label']
+        df[col] = df[col + '_id'].astype(str) + '_' + df[col + '_label'].astype(str)
 
 
 # Read in transcriptomics data matrix at given path.
@@ -105,7 +105,7 @@ def read_file(path):
 
 # Writes given AnnData object to specified path as H5ad.
 def write(adata, out_path):
-    adata.raw.to_adata().write(out_path)
+    adata.write(out_path)
 
 
 # Normalize data matrix of a given AnnData object to target sum. Logarithm will be calculated by default.
