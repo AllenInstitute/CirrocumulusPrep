@@ -7,10 +7,12 @@ import numpy as np
 import pandas as pd
 
 
+# Returns CUDA device if available
 def device():
     return "cuda" if torch.cuda.is_available() else "cpu"
 
 
+# Defines a Dataset object with given single-cell DataFrame
 class SingleCellDataset(Dataset):
   def __init__(self, df, transform=None, shuffle=True):
     self.df = df
@@ -31,10 +33,12 @@ class SingleCellDataset(Dataset):
     return self.df.index.values
 
 
+# Sets elements of data to 0 with given probability p
 def dropout(data, p, device):
     return (torch.rand(data.shape) < (1-p)).to(device).int() * data
 
 
+# Defines a Module object for the denoising autoencoder archetecture
 class DenoisingAE(nn.Module):
     def __init__(self):
         super(DenoisingAE, self).__init__()
@@ -71,6 +75,7 @@ class DenoisingAE(nn.Module):
         return x
 
 
+# Trains a given model and dataloader with specified loss function and optimizer
 def train(dataloader, model, loss_fn, optimizer):
     size = len(dataloader.dataset)
     for batch, X in enumerate(dataloader):
@@ -85,6 +90,7 @@ def train(dataloader, model, loss_fn, optimizer):
         optimizer.step()
 
 
+# Calculates test error of given model and dataloader with specified loss function
 def test(dataloader, model, loss_fn):
     size = len(dataloader.dataset)
     num_batches = len(dataloader)
@@ -99,6 +105,13 @@ def test(dataloader, model, loss_fn):
     print(f"Avg loss: {test_loss:>8f} \n")
 
 
+# Trains the autoencoder model with given AnnData object and returns a full 3D embedding of the data.
+# 'train_split' specifies the proportion of data used for training with the remaining proportion used for
+# calculating test error
+# 'train_batch_size' specifies the number of training samples used per epoch
+# 'test_batch_size' specifies the number of testing samples used per epoch
+# 'embed_batch_size' specifies the chunk size when applying the embedding.
+# A higher value will use more memory but less time, a smaller value will use less memory but take longer.
 def embed(adata, train_split=0.85, train_batch_size=1000, test_batch_size=1000, epochs=1000,
           embed_batch_size=1000):
     df = adata.to_df()
