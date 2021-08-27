@@ -135,3 +135,25 @@ def h5sc_to_h5ad(in_file, out_file):
     adata = ad.AnnData(X=mat, obs=obs, var=var)
     adata.write(out_file)
 
+
+def prepare(path_to_input, path_to_output, path_to_embed=None, path_to_meta=None,
+            meta_columns=None, combine_ids=False, norm=False):
+    adata = read_file(path_to_input)
+    if norm:
+        normalize(adata, log=True)
+    if path_to_embed is not None:
+        embed = pd.read_csv(path_to_embed, index_col='sample_id')
+        append_embedding(adata, embedding=embed, name='/'.split(path_to_output)[-1])
+
+    if path_to_meta is not None:
+        meta = pd.read_csv(path_to_meta, index_col='sample_id')
+
+        if meta_columns is None:
+            meta_columns = ['class', 'subclass', 'region', 'cluster']
+        if combine_ids:
+            combine_id_labels(meta, columns=meta_columns)
+        meta = subset_metadata(meta, columns=meta_columns)
+
+        append_metadata(adata, metadata_df=meta)
+
+    write(adata, path_to_output)

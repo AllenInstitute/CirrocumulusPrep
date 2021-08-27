@@ -5,6 +5,16 @@ import pandas as pd
 
 
 def main():
+
+    # The entire pipeline can be done with prepare() like below.
+    # However the data must be formatted correctly. (ex. 'sample_id' is the name of the sample columns)
+    # Otherwise, use the pipeline below as a guide.
+    # cirrop.prepare(path_to_input='demo_data.h5ad',
+    #                path_to_output='processed.h5ad',
+    #                path_to_embed='umap.csv',
+    #                path_to_meta='metadata.csv',
+    #                norm=True)
+
     # read an h5ad file as AnnData object.
     adata = cirrop.read_file('demo_data.h5ad')
 
