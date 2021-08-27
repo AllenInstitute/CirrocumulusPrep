@@ -1,6 +1,10 @@
 # This bash script is an example of how to freeze your prepared data and visualize with Cirrocumulus.
+
+# Activate your conda environment with the following packages:
+# numpy, scanpy, pandas, anndata, scipy, h5py, pytorch, torchvision
 conda activate cirrocumulus
-python example.py
+
+python example_script.py
 
 # Add --whitelist flag to only freeze certain fields.
 # Ex. cirro prepare_data processed.h5ad --whitelist obsm (for embedding only)
