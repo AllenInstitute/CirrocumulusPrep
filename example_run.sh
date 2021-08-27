@@ -8,9 +8,9 @@ python example_script.py
 
 # Add --whitelist flag to only freeze certain fields.
 # Ex. cirro prepare_data processed.h5ad --whitelist obsm (for embedding only)
-cirro prepare_data processed.h5ad
+cirro prepare_data demo/processed.h5ad
 
-cirro launch processed
+cirro launch demo/processed
 
 # if uploading to gcloud, modify and run the below command
 # gsutil -m cp -r [local_folder] gs://[gs_path]
