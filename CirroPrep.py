@@ -55,6 +55,7 @@ def select_variable_genes(adata, n_top_genes=5000):
 
 # Applies a 3D UMAP embedding to given AnnData object.
 def apply_umap(adata):
+    sc.pp.neighbors(adata)
     sc.tl.umap(adata, n_components=3)
 
 
